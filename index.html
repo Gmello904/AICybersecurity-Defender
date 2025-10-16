@@ -22,7 +22,7 @@
     .card { background:#0f1620; padding:14px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.35); }
     .threat-log { background:#000; color:#00ff66; font-family:Courier, monospace; padding:12px; border-radius:8px; height:240px; overflow-y:auto; border:1px solid #0ad4a6; white-space:pre-wrap; transition:0.3s; }
 
-    .btn { background:#0a84ff; color:white; border:none; padding:10px 14px; margin:8px 6px 0 0; border-radius:8px; cursor:pointer; transition:.3s; font-weight:700; }
+    .btn { background:#0a84ff; color:white; border:none; padding:10px 14px; margin:6px 6px 0 0; border-radius:8px; cursor:pointer; transition:.3s; font-weight:700; }
     .btn:hover { transform:translateY(-2px) scale(1.05); background:#0ad4a6; color:black; }
 
     footer { text-align:center; padding:16px; margin-top:18px; color:#9aa3ad; font-size:.95rem; }
@@ -37,7 +37,7 @@
 </head>
 <body>
   <header>
-    <h1>🛡️ MellowTech AI Cybersecurity Defender</h1>
+    <h1>MellowTech AI Cybersecurity Defender</h1>
     <p>Smart Detection • Instant Defense • Predictive Intelligence</p>
   </header>
 
@@ -46,21 +46,26 @@
     <p class="status">Status: <span id="systemStatus" class="online">Online — Monitoring</span></p>
 
     <div class="metrics">
-      <div class="metric"><small>🔍 Active AI Scans</small><strong id="scanCount">0</strong></div>
-      <div class="metric"><small>🚨 Threats Neutralized</small><strong id="neutralized">0</strong></div>
-      <div class="metric"><small>🧠 AI Confidence</small><strong id="confidence">98%</strong></div>
-      <div class="metric"><small>🔗 Connected Systems</small><strong id="connectedCount">3</strong></div>
+      <div class="metric"><small>Active AI Scans</small><strong id="scanCount">0</strong></div>
+      <div class="metric"><small>Threats Neutralized</small><strong id="neutralized">0</strong></div>
+      <div class="metric"><small>AI Confidence</small><strong id="confidence">98%</strong></div>
+      <div class="metric"><small>Connected Systems</small><strong id="connectedCount">3</strong></div>
+      <div class="metric"><small>Predicted Threats</small><strong id="predictedThreats">0</strong></div>
     </div>
 
     <div class="grid">
       <section class="card">
         <h3>Threat Log</h3>
-        <div class="threat-log" id="threatLog">[System Initialized] ⏱️\n</div>
+        <div class="threat-log" id="threatLog">[System Initialized]\n</div>
         <div style="margin-top:10px;">
-          <button class="btn" onclick="autoDemo()">🤖 Auto Demo Mode</button>
-          <button class="btn" onclick="simulateThreat()">⚡ Random Threat</button>
-          <button class="btn" onclick="activateLearning()">🧠 Train AI (Quick)</button>
-          <button class="btn" onclick="clearLog()">🧹 Clear Log</button>
+          <button class="btn" onclick="autoDemo()">Auto Demo Mode</button>
+          <button class="btn" onclick="simulateThreat()">Random Threat</button>
+          <button class="btn" onclick="activateLearning()">Train AI (Quick)</button>
+          <button class="btn" onclick="clearLog()">Clear Log</button>
+          <button class="btn" onclick="predictThreat()">Predict Threat</button>
+          <button class="btn" onclick="autoContain()">Auto Contain Threats</button>
+          <button class="btn" onclick="generateComplianceReport()">Compliance Report</button>
+          <button class="btn" onclick="simulateCyberDrill()">Cyber Drill</button>
         </div>
       </section>
 
@@ -78,7 +83,7 @@
             <option value="Manufacturing-IoT">Manufacturing-IoT</option>
             <option value="RetailPOS">RetailPOS</option>
           </select>
-          <button class="btn" onclick="scanExternal()">🖥️ Scan System</button>
+          <button class="btn" onclick="scanExternal()">Scan System</button>
         </div>
       </section>
 
@@ -89,54 +94,78 @@
 
       <section class="card">
         <h3>System Health</h3>
-        <p>🖥️ CPU Load: <span id="cpuLoad">23%</span></p>
-        <p>💾 Memory Usage: <span id="memory">48%</span></p>
-        <p>🌐 Network Latency: <span id="latency">32ms</span></p>
+        <p>CPU Load: <span id="cpuLoad">23%</span></p>
+        <p>Memory Usage: <span id="memory">48%</span></p>
+        <p>Network Latency: <span id="latency">32ms</span></p>
         <h4>Manual Input Detection</h4>
         <input id="manualInput" class="small-input" placeholder="Paste suspicious payload" style="width:100%; margin-bottom:10px;" />
         <div>
-          <button class="btn" onclick="detectManual()">🔍 Analyze Input</button>
-          <button class="btn" onclick="generateReport()">📄 Generate Report</button>
+          <button class="btn" onclick="detectManual()">Analyze Input</button>
+          <button class="btn" onclick="generateReport()">Generate Report</button>
         </div>
       </section>
     </div>
   </main>
 
-  <footer>Built for Hackathon 2025 🚀 | <b>MellowTech AI Cybersecurity</b></footer>
+  <footer>Built for Hackathon 2025 | MellowTech AI Cybersecurity</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const log=document.getElementById('threatLog');
-    const status=document.getElementById('systemStatus');
-    const intelFeed=document.getElementById('intelFeed');
-    const scanCount=document.getElementById('scanCount');
-    const neutralized=document.getElementById('neutralized');
+    const log = document.getElementById('threatLog');
+    const status = document.getElementById('systemStatus');
+    const intelFeed = document.getElementById('intelFeed');
+    const scanCount = document.getElementById('scanCount');
+    const neutralized = document.getElementById('neutralized');
+    const confidence = document.getElementById('confidence');
 
-    let threats={DDoS:0,SQL:0,Malware:0,Phishing:0}, scans=0, neutralizedCount=0;
+    let threats = {DDoS:0, SQL:0, Malware:0, Phishing:0}, scans=0, neutralizedCount=0, predictedCount=0;
 
-    const ctx=document.getElementById('threatChart');
-    const threatChart=new Chart(ctx,{ type:'doughnut', data:{ labels:['DDoS','SQL Injection','Malware','Phishing'], datasets:[{data:[0,0,0,0], backgroundColor:['#0a84ff','#ff3b3b','#ffa500','#0ad4a6']}] }, options:{ plugins:{legend:{labels:{color:'#fff'}}}, maintainAspectRatio:false } });
+    const ctx = document.getElementById('threatChart');
+    const threatChart = new Chart(ctx, {
+      type:'doughnut',
+      data:{ labels:['DDoS','SQL Injection','Malware','Phishing'], datasets:[{data:[0,0,0,0], backgroundColor:['#0a84ff','#ff3b3b','#ffa500','#0ad4a6']}] },
+      options:{ plugins:{legend:{labels:{color:'#fff'}}}, maintainAspectRatio:false }
+    });
 
-    function updateChart(){ threatChart.data.datasets[0].data=[threats.DDoS,threats.SQL,threats.Malware,threats.Phishing]; threatChart.update(); }
+    function updateChart() {
+      threatChart.data.datasets[0].data=[threats.DDoS, threats.SQL, threats.Malware, threats.Phishing];
+      threatChart.update();
+    }
 
-    function addLog(msg){ const ts=new Date().toLocaleTimeString(); log.innerText+=`[${ts}] ${msg}\n`; log.scrollTop=log.scrollHeight; }
-    function addIntel(msg){ const li=document.createElement('li'); li.textContent=msg; intelFeed.prepend(li); if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild); }
+    function addLog(msg) {
+      const ts = new Date().toLocaleTimeString();
+      log.innerText += `[${ts}] ${msg}\n`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function addIntel(msg) {
+      const li = document.createElement('li');
+      li.textContent = msg;
+      intelFeed.prepend(li);
+      if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild);
+    }
 
     function simulateThreat(){ const types=['DDoS','SQL Injection','Malware','Phishing']; simulateSpecific(types[Math.floor(Math.random()*types.length)]); }
 
-    function simulateSpecific(type){ scans++; scanCount.innerText=scans; addLog(`⚠️ ${type} detected. Deploying countermeasures...`); status.className='alert'; status.innerText=`⚠️ Mitigating ${type}...`;
-      setTimeout(()=>{ addLog(`✅ ${type} neutralized.`); threats[type==='SQL Injection'?'SQL':type]++; neutralizedCount++; neutralized.innerText=neutralizedCount; addIntel(`${type} threat blocked.`); status.className='online'; status.innerText='Online — Monitoring'; updateChart(); },2000); }
+    function simulateSpecific(type){ scans++; scanCount.innerText=scans; addLog(`${type} detected. Deploying countermeasures...`); status.className='alert'; status.innerText=`Mitigating ${type}...`;
+      setTimeout(()=>{ addLog(`${type} neutralized.`); threats[type==='SQL Injection'?'SQL':type]++; neutralizedCount++; neutralized.innerText=neutralizedCount; addIntel(`${type} threat blocked.`); status.className='online'; status.innerText='Online — Monitoring'; updateChart(); },2000);
+    }
 
     function clearLog(){ log.innerText='[System Reset]\n'; status.className='online'; status.innerText='Online — Monitoring'; }
 
-    function detectManual(){ const val=document.getElementById('manualInput').value.trim(); if(!val) return; addLog(`Analyzing input: ${val}`); setTimeout(()=>{ if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection'); else addLog('✅ Input appears safe.'); },1000); }
+    function detectManual(){ const val=document.getElementById('manualInput').value.trim(); if(!val) return; addLog(`Analyzing input: ${val}`); setTimeout(()=>{ if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection'); else addLog('Input appears safe.'); },1000); }
 
-    function scanExternal(){ const sys=document.getElementById('externalSystem').value; addLog(`🔗 Scanning external system: ${sys}...`); status.className='alert'; status.innerText=`Scanning ${sys}...`;
-      setTimeout(()=>{ addLog(`✅ Scan complete. ${sys} secure.`); addIntel(`${sys} scanned and safe.`); status.className='online'; status.innerText='Online — Monitoring'; },2000); }
+    function scanExternal(){ const sys=document.getElementById('externalSystem').value; addLog(`Scanning external system: ${sys}...`); status.className='alert'; status.innerText=`Scanning ${sys}...`;
+      setTimeout(()=>{ addLog(`Scan complete. ${sys} secure.`); addIntel(`${sys} scanned and safe.`); status.className='online'; status.innerText='Online — Monitoring'; },2000);
+    }
 
     function autoDemo(){ let count=0; const demo=setInterval(()=>{ simulateThreat(); count++; if(count>5) clearInterval(demo); },2500); }
-    function activateLearning(){ addLog('🧠 AI training initiated...'); setTimeout(()=>{ addLog('✅ AI training complete. Confidence improved.'); confidence.innerText='99%'; },2000); }
-    function generateReport(){ addLog('📄 Generating quick security report...'); setTimeout(()=>{ addLog('✅ Report ready. All threats neutralized.'); },1500); }
+    function activateLearning(){ addLog('AI training initiated...'); setTimeout(()=>{ addLog('AI training complete. Confidence improved.'); confidence.innerText='99%'; },2000); }
+    function predictThreat(){ addLog('Predicting potential threats...'); setTimeout(()=>{ predictedCount++; document.getElementById('predictedThreats').innerText=predictedCount; addIntel('Potential threat predicted.'); },1500); }
+    function autoContain(){ addLog('Automatically containing detected threats...'); setTimeout(()=>{ addLog('All active threats contained.'); },1500); }
+    function generateComplianceReport(){ addLog('Generating compliance report...'); setTimeout(()=>{ addLog('Compliance report ready.'); },1500); }
+    function simulateCyberDrill(){ addLog('Simulating cyber drill...'); setTimeout(()=>{ addLog('Cyber drill completed successfully.'); },2000); }
+    function generateReport(){ addLog('Generating quick security report...'); setTimeout(()=>{ addLog('Report ready. All threats neutralized.'); },1500); }
   </script>
 </body>
 </html>
