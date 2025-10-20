@@ -28,12 +28,12 @@
     .metric strong { display:block; font-size:1.05rem; color:#fff; }
     .card h3 { margin:0 0 8px 0; color:#cfeff2; }
     .lights { display:flex; justify-content:center; gap:16px; margin-bottom:10px; }
-    .light { width:40px; height:20px; border-radius:6px; opacity:0.3; box-shadow:0 0 12px rgba(255,255,255,0.2); }
-    .red { background-color:red; animation:flashRed 0.4s infinite alternate; box-shadow:0 0 28px red; }
-    .blue { background-color:blue; animation:flashBlue 0.4s infinite alternate; box-shadow:0 0 28px blue; }
+    .light { width:50px; height:50px; border-radius:50%; opacity:0.5; box-shadow:0 0 20px rgba(255,255,255,0.5); }
+    .red { background-color:red; animation:flashRed 0.2s infinite alternate; box-shadow:0 0 80px red, 0 0 120px red; }
+    .blue { background-color:blue; animation:flashBlue 0.2s infinite alternate; box-shadow:0 0 80px blue, 0 0 120px blue; }
     .hidden .light { animation:none; opacity:0.1; box-shadow:none; }
-    @keyframes flashRed { 0%{opacity:1; box-shadow:0 0 28px red;} 100%{opacity:0.3; box-shadow:0 0 8px red;} }
-    @keyframes flashBlue { 0%{opacity:1; box-shadow:0 0 28px blue;} 100%{opacity:0.3; box-shadow:0 0 8px blue;} }
+    @keyframes flashRed { 0%{opacity:1; box-shadow:0 0 80px red,0 0 120px red;} 100%{opacity:0.4; box-shadow:0 0 30px red,0 0 50px red;} }
+    @keyframes flashBlue { 0%{opacity:1; box-shadow:0 0 80px blue,0 0 120px blue;} 100%{opacity:0.4; box-shadow:0 0 30px blue,0 0 50px blue;} }
   </style>
 </head>
 <body>
@@ -115,98 +115,84 @@
 
   <footer>Built for Hackathon 2025 | MellowTech AI Cybersecurity</footer>
 
+  <!-- Audio element -->
+  <audio id="sirenSound" src="https://actions.google.com/sounds/v1/emergency/car_alarm.ogg" preload="auto"></audio>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-    const log = document.getElementById('threatLog');
-    const status = document.getElementById('systemStatus');
-    const intelFeed = document.getElementById('intelFeed');
-    const scanCount = document.getElementById('scanCount');
-    const neutralized = document.getElementById('neutralized');
-    const confidence = document.getElementById('confidence');
+    // DOM elements
+    const log=document.getElementById('threatLog');
+    const status=document.getElementById('systemStatus');
+    const intelFeed=document.getElementById('intelFeed');
+    const scanCount=document.getElementById('scanCount');
+    const neutralized=document.getElementById('neutralized');
+    const confidence=document.getElementById('confidence');
+    const audio=document.getElementById('sirenSound');
 
-    let threats = {DDoS:0, SQL:0, Malware:0, Phishing:0}, scans=0, neutralizedCount=0, predictedCount=0;
+    // State
+    let threats={DDoS:0,SQL:0,Malware:0,Phishing:0},scans=0,neutralizedCount=0,predictedCount=0;
 
-    const ctx = document.getElementById('threatChart');
-    const threatChart = new Chart(ctx, {
+    // Chart
+    const ctx=document.getElementById('threatChart');
+    const threatChart=new Chart(ctx,{
       type:'doughnut',
-      data:{ labels:['DDoS','SQL Injection','Malware','Phishing'], datasets:[{data:[0,0,0,0], backgroundColor:['#0a84ff','#ff3b3b','#ffa500','#0ad4a6']}] },
-      options:{ plugins:{legend:{labels:{color:'#fff'}}}, maintainAspectRatio:false }
+      data:{labels:['DDoS','SQL Injection','Malware','Phishing'], datasets:[{data:[0,0,0,0], backgroundColor:['#0a84ff','#ff3b3b','#ffa500','#0ad4a6']}]},
+      options:{plugins:{legend:{labels:{color:'#fff'}}}, maintainAspectRatio:false}
     });
 
-    function updateChart() {
-      threatChart.data.datasets[0].data=[threats.DDoS, threats.SQL, threats.Malware, threats.Phishing];
-      threatChart.update();
-    }
+    function updateChart(){ threatChart.data.datasets[0].data=[threats.DDoS,threats.SQL,threats.Malware,threats.Phishing]; threatChart.update(); }
 
-    function addLog(msg) {
-      const ts = new Date().toLocaleTimeString();
-      log.innerText += `[${ts}] ${msg}\n`;
-      log.scrollTop = log.scrollHeight;
-    }
+    function addLog(msg){ const ts=new Date().toLocaleTimeString(); log.innerText+=`[${ts}] ${msg}\n`; log.scrollTop=log.scrollHeight; }
 
-    function addIntel(msg) {
-      const li = document.createElement('li');
-      li.textContent = msg;
-      intelFeed.prepend(li);
-      if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild);
-    }
+    function addIntel(msg){ const li=document.createElement('li'); li.textContent=msg; intelFeed.prepend(li); if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild); }
 
     function simulateThreat(){ const types=['DDoS','SQL Injection','Malware','Phishing']; simulateSpecific(types[Math.floor(Math.random()*types.length)]); }
 
-    function activateEmergencyLights() {
-      const lights = document.getElementById('emergency-lights');
+    // --- SIREN FIXED ---
+    function playSiren(){ audio.currentTime=0; audio.volume=1; audio.play(); }
+    function stopSiren(){ audio.pause(); audio.currentTime=0; }
+
+    function activateEmergencyLights(){
+      const lights=document.getElementById('emergency-lights');
       lights.classList.remove('hidden');
-      setTimeout(() => { lights.classList.add('hidden'); }, 10000);
+      playSiren();
+      setTimeout(()=>{ lights.classList.add('hidden'); stopSiren(); },10000);
     }
 
-    function testLights(){ const lights=document.getElementById('emergency-lights'); if(lights.classList.contains('hidden')){ lights.classList.remove('hidden'); setTimeout(()=>lights.classList.add('hidden'),8000);} else { lights.classList.add('hidden'); }}
+    function testLights(){
+      const lights=document.getElementById('emergency-lights');
+      if(lights.classList.contains('hidden')){ lights.classList.remove('hidden'); playSiren(); setTimeout(()=>{ lights.classList.add('hidden'); stopSiren(); },8000); }
+      else { lights.classList.add('hidden'); stopSiren(); }
+    }
 
-    function simulateSpecific(type){ 
-      scans++; scanCount.innerText=scans; 
-      addLog(`${type} detected. Deploying countermeasures...`); 
-      status.className='alert'; status.innerText=`Mitigating ${type}...`; 
+    function simulateSpecific(type){
+      scans++; scanCount.innerText=scans;
+      addLog(`${type} detected. Deploying countermeasures...`);
+      status.className='alert';
+      status.innerText=`Mitigating ${type}...`;
       activateEmergencyLights();
       setTimeout(()=>{
-        addLog(`${type} neutralized.`); 
-        threats[type==='SQL Injection'?'SQL':type]++; 
-        neutralizedCount++; neutralized.innerText=neutralizedCount; 
-        addIntel(`${type} threat blocked.`); 
-        status.className='online'; status.innerText='Online — Monitoring'; 
-        updateChart(); 
+        addLog(`${type} neutralized.`);
+        threats[type==='SQL Injection'?'SQL':type]++;
+        neutralizedCount++; neutralized.innerText=neutralizedCount;
+        addIntel(`${type} threat blocked.`);
+        status.className='online';
+        status.innerText='Online — Monitoring';
+        updateChart();
       },2000);
     }
 
     function clearLog(){ log.innerText='[System Reset]\n'; status.className='online'; status.innerText='Online — Monitoring'; }
 
-    function detectManual(){ 
-      const val=document.getElementById('manualInput').value.trim(); 
-      if(!val) return; 
-      addLog(`Analyzing input: ${val}`); 
-      setTimeout(()=>{ 
-        if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection'); 
-        else addLog('Input appears safe.'); 
-      },1000); 
+    function detectManual(){
+      const val=document.getElementById('manualInput').value.trim();
+      if(!val) return;
+      addLog(`Analyzing input: ${val}`);
+      setTimeout(()=>{
+        if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection');
+        else addLog('Input appears safe.');
+      },1000);
     }
 
-    function scanExternal(){ 
-      const sys=document.getElementById('externalSystem').value; 
-      addLog(`Scanning external system: ${sys}...`); 
-      status.className='alert'; status.innerText=`Scanning ${sys}...`;
-      setTimeout(()=>{ 
-        addLog(`Scan complete. ${sys} secure.`); 
-        addIntel(`${sys} scanned and safe.`); 
-        status.className='online'; status.innerText='Online — Monitoring'; 
-      },2000);
-    }
-
-    function autoDemo(){ let count=0; const demo=setInterval(()=>{ simulateThreat(); count++; if(count>5) clearInterval(demo); },2500); }
-    function activateLearning(){ addLog('AI training initiated...'); setTimeout(()=>{ addLog('AI training complete. Confidence improved.'); confidence.innerText='99%'; },2000); }
-    function predictThreat(){ addLog('Predicting potential threats...'); setTimeout(()=>{ predictedCount++; document.getElementById('predictedThreats').innerText=predictedCount; addIntel('Potential threat predicted.'); },1500); }
-    function autoContain(){ addLog('Automatically containing detected threats...'); setTimeout(()=>{ addLog('All active threats contained.'); },1500); }
-    function generateComplianceReport(){ addLog('Generating compliance report...'); setTimeout(()=>{ addLog('Compliance report ready.'); },1500); }
-    function simulateCyberDrill(){ addLog('Simulating cyber drill...'); setTimeout(()=>{ addLog('Cyber drill completed successfully.'); },2000); }
-    function generateReport(){ addLog('Generating quick security report...'); setTimeout(()=>{ addLog('Report ready. All threats neutralized.'); },1500); }
-  </script>
-</body>
-</html>
-
+    function scanExternal(){
+      const sys=document.getElementById
