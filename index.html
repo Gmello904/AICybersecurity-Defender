@@ -126,6 +126,7 @@
     const scanCount=document.getElementById('scanCount');
     const neutralized=document.getElementById('neutralized');
     const confidence=document.getElementById('confidence');
+    const audio=document.getElementById('sirenSound');
 
     let threats={DDoS:0,SQL:0,Malware:0,Phishing:0},scans=0,neutralizedCount=0,predictedCount=0;
 
@@ -162,33 +163,14 @@
       simulateSpecific(types[Math.floor(Math.random()*types.length)]);
     }
 
-    // --- SIREN FIX ---
-    const audio=document.getElementById('sirenSound');
-    const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-    const source=audioCtx.createMediaElementSource(audio);
-    const gainNode=audioCtx.createGain();
-    gainNode.gain.value=3; // louder
-    source.connect(gainNode).connect(audioCtx.destination);
-
-    function playSiren(){
-      if(audioCtx.state==='suspended') audioCtx.resume();
-      audio.currentTime=0;
-      audio.play();
-    }
-
-    function stopSiren(){
-      audio.pause();
-      audio.currentTime=0;
-    }
+    function playSiren(){ audio.currentTime=0; audio.volume=1; audio.play().catch(err=>console.log('Audio blocked')); }
+    function stopSiren(){ audio.pause(); audio.currentTime=0; }
 
     function activateEmergencyLights(){
       const lights=document.getElementById('emergency-lights');
       lights.classList.remove('hidden');
       playSiren();
-      setTimeout(()=>{
-        lights.classList.add('hidden');
-        stopSiren();
-      },10000);
+      setTimeout(()=>{ lights.classList.add('hidden'); stopSiren(); },10000);
     }
 
     function testLights(){
@@ -197,13 +179,9 @@
         lights.classList.remove('hidden');
         playSiren();
         setTimeout(()=>{ lights.classList.add('hidden'); stopSiren(); },8000);
-      } else {
-        lights.classList.add('hidden');
-        stopSiren();
-      }
+      } else { lights.classList.add('hidden'); stopSiren(); }
     }
 
-    // --- THREAT SIMULATION ---
     function simulateSpecific(type){
       scans++;
       scanCount.innerText=scans;
@@ -224,6 +202,7 @@
     }
 
     function clearLog(){ log.innerText='[System Reset]\n'; status.className='online'; status.innerText='Online — Monitoring'; }
+
     function detectManual(){
       const val=document.getElementById('manualInput').value.trim();
       if(!val) return;
@@ -231,8 +210,7 @@
       setTimeout(()=>{
         if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack'))
           simulateSpecific('SQL Injection');
-        else
-          addLog('Input appears safe.');
+        else addLog('Input appears safe.');
       },1000);
     }
 
@@ -258,4 +236,4 @@
     function generateReport(){ addLog('Generating quick security report...'); setTimeout(()=>{ addLog('Report ready. All threats neutralized.'); },1500); }
   </script>
 </body>
-</html>    make this codes clean without error 
+</html>
