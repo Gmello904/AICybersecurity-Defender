@@ -23,14 +23,71 @@ header {
   position: relative;
   overflow: hidden;
 }
-header h1 { margin: 0; font-size: 3.5rem; }
+
+/* Arrows around header */
+header::before, header::after {
+  content: "➤";
+  position: absolute;
+  font-size: 2.5rem;
+  color: #0ad4a6;
+  animation: rotateAround 6s linear infinite;
+}
+header::before {
+  top: 10%;
+  left: 50%;
+  transform-origin: center 120px;
+}
+header::after {
+  bottom: 10%;
+  right: 50%;
+  transform-origin: center -120px;
+  animation-delay: 3s;
+}
+@keyframes rotateAround {
+  0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+/* Header content flex for shield + name */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+}
+
+/* Shield styling */
+.shield {
+  font-size: 3rem;
+  color: #0ad4a6;
+  text-shadow: 0 0 14px #0077ff;
+  animation: pulseGlow 2.5s infinite alternate;
+}
+
+/* Glowing header text with two colors */
+header h1 {
+  margin: 0;
+  font-size: 3.5rem;
+}
 header h1 span.mellow { color: #fff; }
 header h1 span.secure { color: #000; }
-header p { margin: 8px 0 0; font-size: 1.1rem; opacity: .95; }
+
+/* Pulse glow for shield */
+@keyframes pulseGlow {
+  0% { text-shadow: 0 0 20px #0ad4a6, 0 0 40px #0077ff; }
+  100% { text-shadow: 0 0 40px #0ad4a6, 0 0 80px #0077ff; }
+}
+
+header p {
+  margin: 8px 0 0;
+  font-size: 1.1rem;
+  opacity: .95;
+}
 
 /* ===== MAIN DASHBOARD ===== */
 .container {
-  max-width: 1400px;
+  max-width: 1300px;
   margin: 26px auto;
   padding: 18px;
   background: #12151b;
@@ -38,14 +95,33 @@ header p { margin: 8px 0 0; font-size: 1.1rem; opacity: .95; }
   box-shadow: 0 0 22px rgba(0,0,0,0.45);
 }
 
-h2 { color: #0ad4a6; border-bottom: 2px solid #0ad4a6; padding-bottom: 6px; }
+h2 {
+  color: #0ad4a6;
+  border-bottom: 2px solid #0ad4a6;
+  padding-bottom: 6px;
+}
 
-.status { font-size: 1.05rem; margin: 12px 0; }
-.status span { font-weight: 700; padding: 6px 10px; border-radius: 6px; display: inline-block; transition: 0.3s; }
+.status {
+  font-size: 1.05rem;
+  margin: 12px 0;
+}
+.status span {
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  transition: 0.3s;
+}
 .online { background: #0ad4a6; color: black; }
 .alert { background: #ff3b3b; color: white; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; align-items: stretch; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  align-items: stretch;
+}
 
 .card {
   background: #0f1620;
@@ -55,42 +131,91 @@ h2 { color: #0ad4a6; border-bottom: 2px solid #0ad4a6; padding-bottom: 6px; }
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 280px;
+  height: 430px;
 }
-.card h3 { margin: 0 0 8px 0; }
-.card p { font-size: .95rem; color: #cfeff2; margin-bottom: 12px; }
+
+.threat-log {
+  background: #000;
+  color: #00ff66;
+  font-family: Courier, monospace;
+  padding: 12px;
+  border-radius: 8px;
+  height: 220px;
+  overflow-y: auto;
+  border: 1px solid #0ad4a6;
+  white-space: pre-wrap;
+  transition: 0.3s;
+}
 
 .btn {
   background: #0077ff;
   color: white;
   border: none;
   padding: 10px 14px;
-  margin-top: auto;
+  margin: 6px 6px 0 0;
   border-radius: 8px;
   cursor: pointer;
   transition: .3s;
   font-weight: 700;
 }
-.btn:hover { transform: translateY(-2px) scale(1.05); background: #0ad4a6; color: black; }
+.btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: #0ad4a6;
+  color: black;
+}
 
-footer { text-align: center; padding: 16px; margin-top: 18px; color: #9aa3ad; font-size: .95rem; }
-canvas { width: 100% !important; max-height: 240px; transition: 0.3s; }
+footer {
+  text-align: center;
+  padding: 16px;
+  margin-top: 18px;
+  color: #9aa3ad;
+  font-size: .95rem;
+}
 
-/* Module Card Colors */
-.module-network { border-top: 4px solid #0077ff; }
-.module-endpoint { border-top: 4px solid #0ad4a6; }
-.module-app { border-top: 4px solid #ffa500; }
-.module-cloud { border-top: 4px solid #8e44ad; }
-.module-iam { border-top: 4px solid #e74c3c; }
-.module-incident { border-top: 4px solid #f1c40f; }
-.module-ethical { border-top: 4px solid #1abc9c; }
-.module-forensics { border-top: 4px solid #3498db; }
+canvas {
+  width: 100% !important;
+  max-height: 240px;
+  transition: 0.3s;
+}
 
-/* Alert Wave Effect */
+select, .small-input {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #0b1720;
+  color: #fff;
+  margin-right: 8px;
+}
+
+.metrics {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.metric {
+  background: #071018;
+  padding: 10px 12px;
+  border-radius: 8px;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+.metric strong {
+  display: block;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.card h3 {
+  margin: 0 0 8px 0;
+  color: #cfeff2;
+}
+
+/* ===== RED RIPPLE WAVE EFFECT ===== */
 .alert-wave {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 25%;
   width: 180px;
   height: 180px;
   background: radial-gradient(circle, rgba(255,0,0,0.75) 0%, rgba(255,0,0,0) 80%);
@@ -102,6 +227,7 @@ canvas { width: 100% !important; max-height: 240px; transition: 0.3s; }
   filter: blur(1px);
   display: none;
 }
+
 @keyframes ripple {
   0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
   60% { transform: translate(-50%, -50%) scale(2); opacity: 0.4; }
@@ -118,147 +244,216 @@ canvas { width: 100% !important; max-height: 240px; transition: 0.3s; }
 
 <body>
 <header>
-  <h1><span class="mellow">Mellow</span><span class="secure">Secure</span></h1>
-  <p>Smart Detection • Instant Defense • Predictive Intelligence</p>
+  <div class="header-content">
+    <span class="shield">🛡️</span>
+    <div>
+      <h1><span class="mellow">Mellow</span><span class="secure">Secure</span></h1>
+      <p>Smart Detection • Instant Defense • Predictive Intelligence</p>
+    </div>
+  </div>
 </header>
 
 <main class="container">
   <h2>System Overview</h2>
   <p class="status">Status: <span id="systemStatus" class="online">Online — Monitoring</span></p>
 
+  <div class="metrics">
+    <div class="metric"><small>Active AI Scans</small><strong id="scanCount">0</strong></div>
+    <div class="metric"><small>Threats Neutralized</small><strong id="neutralized">0</strong></div>
+    <div class="metric"><small>AI Confidence</small><strong id="confidence">98%</strong></div>
+    <div class="metric"><small>Connected Systems</small><strong id="connectedCount">3</strong></div>
+    <div class="metric"><small>Predicted Threats</small><strong id="predictedThreats">0</strong></div>
+  </div>
+
   <div class="grid">
-    <!-- Threat Log -->
     <section class="card">
       <h3>Threat Log</h3>
       <div class="threat-log" id="threatLog">[System Initialized]<br></div>
-      <button class="btn" onclick="clearLog()">Clear Log</button>
+      <div style="margin-top:10px;">
+        <button class="btn" onclick="autoDemo()">Auto Demo Mode</button>
+        <button class="btn" onclick="simulateThreat()">Random Threat</button>
+        <button class="btn" onclick="activateLearning()">Train AI (Quick)</button>
+        <button class="btn" onclick="clearLog()">Clear Log</button>
+        <button class="btn" onclick="predictThreat()">Predict Threat</button>
+        <button class="btn" onclick="autoContain()">Auto Contain Threats</button>
+        <button class="btn" onclick="generateComplianceReport()">Compliance Report</button>
+        <button class="btn" onclick="simulateCyberDrill()">Cyber Drill</button>
+        <button class="btn" onclick="testLights()">Test Alert Wave</button>
+      </div>
     </section>
 
-    <!-- Threat Analytics -->
+    <section class="card">
+      <h3>Threat Intelligence Feed</h3>
+      <ul id="intelFeed" style="padding-left:16px; margin-top:8px;"></ul>
+      <hr style="border:0;border-top:1px solid rgba(10,212,166,.08); margin:12px 0;" />
+      <div>
+        <h4>Connected Systems</h4>
+        <p style="color:#9aa3ad; font-size:.95rem;">Simulated external systems.</p>
+        <select id="externalSystem" class="small-input">
+          <option value="FinanceServer">FinanceServer</option>
+          <option value="HRPortal">HRPortal</option>
+          <option value="CloudDB">CloudDB</option>
+          <option value="Manufacturing-IoT">Manufacturing-IoT</option>
+          <option value="RetailPOS">RetailPOS</option>
+        </select>
+        <button class="btn" onclick="scanExternal()">Scan System</button>
+      </div>
+    </section>
+
     <section class="card">
       <h3>Threat Analytics</h3>
       <canvas id="threatChart"></canvas>
     </section>
+
+    <section class="card">
+      <div class="alert-wave" id="alertWave"></div>
+      <h3>System Health</h3>
+      <p>CPU Load: <span id="cpuLoad">23%</span></p>
+      <p>Memory Usage: <span id="memory">48%</span></p>
+      <p>Network Latency: <span id="latency">32ms</span></p>
+      <h4>Manual Input Detection</h4>
+      <input id="manualInput" class="small-input" placeholder="Paste suspicious payload" style="width:100%; margin-bottom:10px;" />
+      <div>
+        <button class="btn" onclick="detectManual()">Analyze Input</button>
+        <button class="btn" onclick="generateReport()">Generate Report</button>
+      </div>
+    </section>
   </div>
 
+  <!-- ===== NEW AI MODULES SECTION ===== -->
   <h2>MellowSecure AI Modules</h2>
   <div class="grid">
-    <section class="card module-network">
+    <section class="card">
       <h3>Network Security</h3>
       <p>Monitor network traffic, detect unusual patterns, and block malicious connections.</p>
       <button class="btn" onclick="simulateModule('Network Security')">Run Simulation</button>
     </section>
 
-    <section class="card module-endpoint">
+    <section class="card">
       <h3>Endpoint Security</h3>
       <p>Protect devices like laptops and servers from malware, unauthorized access, or attacks.</p>
       <button class="btn" onclick="simulateModule('Endpoint Security')">Run Simulation</button>
     </section>
 
-    <section class="card module-app">
+    <section class="card">
       <h3>Application Security</h3>
       <p>Scan software and websites for vulnerabilities like SQL injection and XSS.</p>
       <button class="btn" onclick="simulateModule('Application Security')">Run Simulation</button>
     </section>
 
-    <section class="card module-cloud">
+    <section class="card">
       <h3>Cloud Security</h3>
       <p>Check cloud resources for misconfigurations and unauthorized access.</p>
       <button class="btn" onclick="simulateModule('Cloud Security')">Run Simulation</button>
     </section>
 
-    <section class="card module-iam">
+    <section class="card">
       <h3>Identity & Access Management</h3>
       <p>Monitor user access, login patterns, and detect suspicious activity.</p>
       <button class="btn" onclick="simulateModule('IAM')">Run Simulation</button>
     </section>
 
-    <section class="card module-incident">
+    <section class="card">
       <h3>Incident Response</h3>
       <p>Detect, contain, and resolve cyberattacks automatically.</p>
       <button class="btn" onclick="simulateModule('Incident Response')">Run Simulation</button>
     </section>
 
-    <section class="card module-ethical">
+    <section class="card">
       <h3>Ethical Hacking / Pen Testing</h3>
       <p>Simulate hacker attacks to find weaknesses before criminals do.</p>
       <button class="btn" onclick="simulateModule('Penetration Testing')">Run Simulation</button>
     </section>
 
-    <section class="card module-forensics">
+    <section class="card">
       <h3>Digital Forensics</h3>
       <p>Analyze logs and reconstruct attack paths to identify intruders.</p>
       <button class="btn" onclick="simulateModule('Digital Forensics')">Run Simulation</button>
     </section>
   </div>
-</main>
 
-<!-- Alert Wave -->
-<div class="alert-wave" id="alertWave"></div>
-<audio id="sirenSound" src="https://actions.google.com/sounds/v1/emergency/car_alarm.ogg" preload="auto"></audio>
+</main>
 
 <footer>Built for Hackathon 2025 | MellowSecure AI Cybersecurity</footer>
 
+<audio id="sirenSound" src="https://actions.google.com/sounds/v1/emergency/car_alarm.ogg" preload="auto"></audio>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const log=document.getElementById('threatLog');
 const status=document.getElementById('systemStatus');
-const alertWave=document.getElementById('alertWave');
+const intelFeed=document.getElementById('intelFeed');
+const scanCount=document.getElementById('scanCount');
+const neutralized=document.getElementById('neutralized');
+const confidence=document.getElementById('confidence');
 const audio=document.getElementById('sirenSound');
+const alertWave=document.getElementById('alertWave');
 
-// Threat Analytics Chart
+let threats={DDoS:0,SQL:0,Malware:0,Phishing:0},scans=0,neutralizedCount=0,predictedCount=0;
+
 const ctx=document.getElementById('threatChart');
-const threatChart=new Chart(ctx,{
-  type:'doughnut',
-  data:{
-    labels:['Network','Endpoint','App','Cloud','IAM','Incident','PenTest','Forensics'],
-    datasets:[{data:[0,0,0,0,0,0,0,0],
-               backgroundColor:['#0077ff','#0ad4a6','#ffa500','#8e44ad','#e74c3c','#f1c40f','#1abc9c','#3498db']}]
-  },
-  options:{plugins:{legend:{labels:{color:'#fff'}}}, maintainAspectRatio:false}
-});
+const threatChart=new Chart(ctx,{type:'doughnut',data:{labels:['DDoS','SQL Injection','Malware','Phishing'],datasets:[{data:[0,0,0,0],backgroundColor:['#0077ff','#ff3b3b','#ffa500','#0ad4a6']} ]}, options:{plugins:{legend:{labels:{color:'#fff'}}},maintainAspectRatio:false}});
 
-function addLog(msg){
-  const ts=new Date().toLocaleTimeString();
-  log.innerHTML+=`[${ts}] ${msg}<br>`;
-  log.scrollTop=log.scrollHeight;
+function updateChart(){ threatChart.data.datasets[0].data=[threats.DDoS,threats.SQL,threats.Malware,threats.Phishing]; threatChart.update(); }
+function addLog(msg){ const ts=new Date().toLocaleTimeString(); log.innerHTML+=`[${ts}] ${msg}<br>`; log.scrollTop=log.scrollHeight; }
+function addIntel(msg){ const li=document.createElement('li'); li.textContent=msg; intelFeed.prepend(li); if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild); }
+
+function simulateThreat(){ const types=['DDoS','SQL Injection','Malware','Phishing']; simulateSpecific(types[Math.floor(Math.random()*types.length)]); }
+
+function playSiren(){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>console.log('Click required for audio')); }
+function stopSiren(){ audio.pause(); audio.currentTime=0; }
+
+function activateAlertWave(){ 
+  alertWave.style.display='block'; 
+  playSiren();
+  setTimeout(()=>{ alertWave.style.display='none'; stopSiren(); },8000);
+}
+function testLights(){ activateAlertWave(); }
+
+function simulateSpecific(type){ 
+  scans++; scanCount.innerText=scans; 
+  addLog(`${type} detected. Deploying countermeasures...`); 
+  status.className='alert'; 
+  status.innerText=`Mitigating ${type}...`; 
+  activateAlertWave(); 
+  setTimeout(()=>{ 
+    addLog(`${type} neutralized.`); 
+    threats[type==='SQL Injection'?'SQL':type]++; 
+    neutralizedCount++; 
+    neutralized.innerText=neutralizedCount; 
+    addIntel(`${type} threat blocked.`); 
+    status.className='online'; 
+    status.innerText='Online — Monitoring'; 
+    updateChart(); 
+  },2000); 
 }
 
-// Alert Wave
-function activateAlertWave(){
-  alertWave.style.display='block';
-  audio.currentTime=0;
-  audio.volume=1;
-  audio.play().catch(()=>console.log('Click required for audio'));
-  setTimeout(()=>{ alertWave.style.display='none'; audio.pause(); audio.currentTime=0; },3000);
-}
+function clearLog(){ log.innerHTML='[System Reset]<br>'; status.className='online'; status.innerText='Online — Monitoring'; }
+function detectManual(){ const val=document.getElementById('manualInput').value.trim(); if(!val) return; addLog(`Analyzing input: ${val}`); setTimeout(()=>{ if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection'); else addLog('Input appears safe.'); },1000); }
+function scanExternal(){ const sys=document.getElementById('externalSystem').value; addLog(`Scanning external system: ${sys}...`); status.className='alert'; status.innerText=`Scanning ${sys}...`; setTimeout(()=>{ addLog(`Scan complete. ${sys} secure.`); addIntel(`${sys} scanned and safe.`); status.className='online'; status.innerText='Online — Monitoring'; },2000); }
 
-// Simulation for each module
+function autoDemo(){ let count=0; const demo=setInterval(()=>{ simulateThreat(); count++; if(count>5) clearInterval(demo); },2500); }
+function activateLearning(){ addLog('AI training initiated...'); setTimeout(()=>{ addLog('AI training complete. Confidence improved.'); confidence.innerText='99%'; },2000); }
+function predictThreat(){ addLog('Predicting potential threats...'); setTimeout(()=>{ predictedCount++; document.getElementById('predictedThreats').innerText=predictedCount; addIntel('Potential threat predicted.'); },1500); }
+function autoContain(){ addLog('Automatically containing detected threats...'); setTimeout(()=>{ addLog('All active threats contained.'); },1500); }
+function generateComplianceReport(){ addLog('Generating compliance report...'); setTimeout(()=>{ addLog('Compliance report ready.'); },1500); }
+function simulateCyberDrill(){ addLog('Simulating cyber drill...'); setTimeout(()=>{ addLog('Cyber drill completed successfully.'); },2000); }
+function generateReport(){ addLog('Generating quick security report...'); setTimeout(()=>{ addLog('Security report completed.'); },2000); }
+
+// ===== NEW MODULE SIMULATION FUNCTION =====
 function simulateModule(module){
+  scans++; scanCount.innerText=scans;
+  addLog(`${module} module activated. Analyzing...`);
   status.className='alert';
   status.innerText=`Running ${module} simulation...`;
-  addLog(`Initiating ${module} simulation...`);
   activateAlertWave();
 
   setTimeout(()=>{
     addLog(`${module} simulation completed successfully.`);
     status.className='online';
     status.innerText='Online — Monitoring';
-
-    // Update chart
-    const index = threatChart.data.labels.indexOf(module.includes('Pen')?'PenTest':module.includes('IAM')?'IAM':module);
-    if(index >= 0){
-      threatChart.data.datasets[0].data[index]++;
-      threatChart.update();
-    }
+    neutralizedCount++; neutralized.innerText=neutralizedCount;
+    addIntel(`${module} threat blocked.`);
   },2000);
-}
-
-// Clear log
-function clearLog(){
-  log.innerHTML='[System Reset]<br>';
-  status.className='online';
-  status.innerText='Online — Monitoring';
 }
 </script>
 </body>
