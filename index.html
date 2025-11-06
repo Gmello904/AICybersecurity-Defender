@@ -15,8 +15,8 @@ body {
 
 /* ===== HEADER SECTION ===== */
 header {
-  background: radial-gradient(circle at center, #0077ff 0%, #0ad4a6 90%);
-  padding: 40px 20px;
+  background: radial-gradient(circle at center, #003366 0%, #0055aa 90%);
+  padding: 25px 20px; /* thinner */
   text-align: center;
   color: white;
   box-shadow: 0 0 25px rgba(0,0,0,0.8);
@@ -320,58 +320,17 @@ select, .small-input {
     </section>
   </div>
 
-  <!-- ===== NEW AI MODULES SECTION ===== -->
   <h2>MellowSecure AI Modules</h2>
   <div class="grid">
-    <section class="card">
-      <h3>Network Security</h3>
-      <p>Monitor network traffic, detect unusual patterns, and block malicious connections.</p>
-      <button class="btn" onclick="simulateModule('Network Security')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Endpoint Security</h3>
-      <p>Protect devices like laptops and servers from malware, unauthorized access, or attacks.</p>
-      <button class="btn" onclick="simulateModule('Endpoint Security')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Application Security</h3>
-      <p>Scan software and websites for vulnerabilities like SQL injection and XSS.</p>
-      <button class="btn" onclick="simulateModule('Application Security')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Cloud Security</h3>
-      <p>Check cloud resources for misconfigurations and unauthorized access.</p>
-      <button class="btn" onclick="simulateModule('Cloud Security')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Identity & Access Management</h3>
-      <p>Monitor user access, login patterns, and detect suspicious activity.</p>
-      <button class="btn" onclick="simulateModule('IAM')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Incident Response</h3>
-      <p>Detect, contain, and resolve cyberattacks automatically.</p>
-      <button class="btn" onclick="simulateModule('Incident Response')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Ethical Hacking / Pen Testing</h3>
-      <p>Simulate hacker attacks to find weaknesses before criminals do.</p>
-      <button class="btn" onclick="simulateModule('Penetration Testing')">Run Simulation</button>
-    </section>
-
-    <section class="card">
-      <h3>Digital Forensics</h3>
-      <p>Analyze logs and reconstruct attack paths to identify intruders.</p>
-      <button class="btn" onclick="simulateModule('Digital Forensics')">Run Simulation</button>
-    </section>
+    <section class="card"><h3>Network Security</h3><p>Monitor network traffic, detect unusual patterns, and block malicious connections.</p><button class="btn" onclick="simulateModule('Network Security')">Run Simulation</button></section>
+    <section class="card"><h3>Endpoint Security</h3><p>Protect devices like laptops and servers from malware, unauthorized access, or attacks.</p><button class="btn" onclick="simulateModule('Endpoint Security')">Run Simulation</button></section>
+    <section class="card"><h3>Application Security</h3><p>Scan software and websites for vulnerabilities like SQL injection and XSS.</p><button class="btn" onclick="simulateModule('Application Security')">Run Simulation</button></section>
+    <section class="card"><h3>Cloud Security</h3><p>Check cloud resources for misconfigurations and unauthorized access.</p><button class="btn" onclick="simulateModule('Cloud Security')">Run Simulation</button></section>
+    <section class="card"><h3>Identity & Access Management</h3><p>Monitor user access, login patterns, and detect suspicious activity.</p><button class="btn" onclick="simulateModule('IAM')">Run Simulation</button></section>
+    <section class="card"><h3>Incident Response</h3><p>Detect, contain, and resolve cyberattacks automatically.</p><button class="btn" onclick="simulateModule('Incident Response')">Run Simulation</button></section>
+    <section class="card"><h3>Ethical Hacking / Pen Testing</h3><p>Simulate hacker attacks to find weaknesses before criminals do.</p><button class="btn" onclick="simulateModule('Penetration Testing')">Run Simulation</button></section>
+    <section class="card"><h3>Digital Forensics</h3><p>Analyze logs and reconstruct attack paths to identify intruders.</p><button class="btn" onclick="simulateModule('Digital Forensics')">Run Simulation</button></section>
   </div>
-
 </main>
 
 <footer>Built for Hackathon 2025 | MellowSecure AI Cybersecurity</footer>
@@ -387,74 +346,28 @@ const neutralized=document.getElementById('neutralized');
 const confidence=document.getElementById('confidence');
 const audio=document.getElementById('sirenSound');
 const alertWave=document.getElementById('alertWave');
-
 let threats={DDoS:0,SQL:0,Malware:0,Phishing:0},scans=0,neutralizedCount=0,predictedCount=0;
-
 const ctx=document.getElementById('threatChart');
 const threatChart=new Chart(ctx,{type:'doughnut',data:{labels:['DDoS','SQL Injection','Malware','Phishing'],datasets:[{data:[0,0,0,0],backgroundColor:['#0077ff','#ff3b3b','#ffa500','#0ad4a6']} ]}, options:{plugins:{legend:{labels:{color:'#fff'}}},maintainAspectRatio:false}});
-
 function updateChart(){ threatChart.data.datasets[0].data=[threats.DDoS,threats.SQL,threats.Malware,threats.Phishing]; threatChart.update(); }
 function addLog(msg){ const ts=new Date().toLocaleTimeString(); log.innerHTML+=`[${ts}] ${msg}<br>`; log.scrollTop=log.scrollHeight; }
 function addIntel(msg){ const li=document.createElement('li'); li.textContent=msg; intelFeed.prepend(li); if(intelFeed.childElementCount>8) intelFeed.removeChild(intelFeed.lastChild); }
-
 function simulateThreat(){ const types=['DDoS','SQL Injection','Malware','Phishing']; simulateSpecific(types[Math.floor(Math.random()*types.length)]); }
-
 function playSiren(){ audio.currentTime=0; audio.volume=1; audio.play().catch(()=>console.log('Click required for audio')); }
 function stopSiren(){ audio.pause(); audio.currentTime=0; }
-
-function activateAlertWave(){ 
-  alertWave.style.display='block'; 
-  playSiren();
-  setTimeout(()=>{ alertWave.style.display='none'; stopSiren(); },8000);
-}
+function activateAlertWave(){ alertWave.style.display='block'; playSiren(); setTimeout(()=>{ alertWave.style.display='none'; stopSiren(); },8000); }
 function testLights(){ activateAlertWave(); }
-
-function simulateSpecific(type){ 
-  scans++; scanCount.innerText=scans; 
-  addLog(`${type} detected. Deploying countermeasures...`); 
-  status.className='alert'; 
-  status.innerText=`Mitigating ${type}...`; 
-  activateAlertWave(); 
-  setTimeout(()=>{ 
-    addLog(`${type} neutralized.`); 
-    threats[type==='SQL Injection'?'SQL':type]++; 
-    neutralizedCount++; 
-    neutralized.innerText=neutralizedCount; 
-    addIntel(`${type} threat blocked.`); 
-    status.className='online'; 
-    status.innerText='Online — Monitoring'; 
-    updateChart(); 
-  },2000); 
-}
-
+function simulateSpecific(type){ scans++; scanCount.innerText=scans; addLog(`${type} detected. Deploying countermeasures...`); status.className='alert'; status.innerText=`Mitigating ${type}...`; activateAlertWave(); setTimeout(()=>{ addLog(`${type} neutralized.`); threats[type==='SQL Injection'?'SQL':type]++; neutralizedCount++; neutralized.innerText=neutralizedCount; addIntel(`${type} threat blocked.`); status.className='online'; status.innerText='Online — Monitoring'; updateChart(); },2000); }
 function clearLog(){ log.innerHTML='[System Reset]<br>'; status.className='online'; status.innerText='Online — Monitoring'; }
 function detectManual(){ const val=document.getElementById('manualInput').value.trim(); if(!val) return; addLog(`Analyzing input: ${val}`); setTimeout(()=>{ if(val.toLowerCase().includes('hack')||val.toLowerCase().includes('attack')) simulateSpecific('SQL Injection'); else addLog('Input appears safe.'); },1000); }
 function scanExternal(){ const sys=document.getElementById('externalSystem').value; addLog(`Scanning external system: ${sys}...`); status.className='alert'; status.innerText=`Scanning ${sys}...`; setTimeout(()=>{ addLog(`Scan complete. ${sys} secure.`); addIntel(`${sys} scanned and safe.`); status.className='online'; status.innerText='Online — Monitoring'; },2000); }
-
 function autoDemo(){ let count=0; const demo=setInterval(()=>{ simulateThreat(); count++; if(count>5) clearInterval(demo); },2500); }
 function activateLearning(){ addLog('AI training initiated...'); setTimeout(()=>{ addLog('AI training complete. Confidence improved.'); confidence.innerText='99%'; },2000); }
-function predictThreat(){ addLog('Predicting potential threats...'); setTimeout(()=>{ predictedCount++; document.getElementById('predictedThreats').innerText=predictedCount; addIntel('Potential threat predicted.'); },1500); }
-function autoContain(){ addLog('Automatically containing detected threats...'); setTimeout(()=>{ addLog('All active threats contained.'); },1500); }
-function generateComplianceReport(){ addLog('Generating compliance report...'); setTimeout(()=>{ addLog('Compliance report ready.'); },1500); }
-function simulateCyberDrill(){ addLog('Simulating cyber drill...'); setTimeout(()=>{ addLog('Cyber drill completed successfully.'); },2000); }
-function generateReport(){ addLog('Generating quick security report...'); setTimeout(()=>{ addLog('Security report completed.'); },2000); }
-
-// ===== NEW MODULE SIMULATION FUNCTION =====
-function simulateModule(module){
-  scans++; scanCount.innerText=scans;
-  addLog(`${module} module activated. Analyzing...`);
-  status.className='alert';
-  status.innerText=`Running ${module} simulation...`;
-  activateAlertWave();
-
-  setTimeout(()=>{
-    addLog(`${module} simulation completed successfully.`);
-    status.className='online';
-    status.innerText='Online — Monitoring';
-    neutralizedCount++; neutralized.innerText=neutralizedCount;
-    addIntel(`${module} threat blocked.`);
-  },2000);
-}
+function predictThreat(){ addLog('Predicting potential threats...'); setTimeout(()=>{ predictedCount++; document.getElementById('predictedThreats').innerText=predictedCount; addLog('Predicted phishing campaign detected early.'); addIntel('Proactive block — phishing domain neutralized.'); },1500); }
+function autoContain(){ addLog('Auto containment engaged. All active threats isolated.'); addIntel('Containment module success.'); }
+function generateComplianceReport(){ addLog('Generating compliance report...'); setTimeout(()=>addLog('Report ready: ISO 27001 / POPIA compliant.'),2000); }
+function simulateCyberDrill(){ addLog('Running cyber drill...'); status.className='alert'; status.innerText='Cyber drill running...'; setTimeout(()=>{ addLog('Cyber drill completed successfully.'); status.className='online'; status.innerText='Online — Monitoring'; },3000); }
+function simulateModule(name){ addLog(`Module "${name}" executing simulation...`); setTimeout(()=>addLog(`"${name}" simulation completed successfully.`),2000); }
 </script>
 </body>
 </html>
