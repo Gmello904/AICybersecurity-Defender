@@ -24,6 +24,7 @@ header {
   overflow: hidden;
 }
 
+/* HEADER ROTATING ARROWS */
 header::before, header::after {
   content: "➤";
   position: absolute;
@@ -31,36 +32,28 @@ header::before, header::after {
   color: #0ad4a6;
   animation: rotateAround 6s linear infinite;
 }
-header::before {
-  top: 10%;
-  left: 50%;
-  transform-origin: center 120px;
-}
-header::after {
-  bottom: 10%;
-  right: 50%;
-  transform-origin: center -120px;
-  animation-delay: 3s;
-}
+header::before { top: 10%; left: 50%; transform-origin: center 120px; }
+header::after { bottom: 10%; right: 50%; transform-origin: center -120px; animation-delay: 3s; }
+
 @keyframes rotateAround {
   0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
   100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
 }
 
-/* ===== NEW NEON GLOW TITLE ===== */
+/* ===== SOFT NEON + BLOCK LETTER FONT ===== */
 .neon-title {
-  font-size: 3.8rem;
-  font-weight: 700;
-  color: #00f7ff;
+  font-size: 3.6rem;
+  font-weight: 900;
+  font-family: 'Impact', 'Anton', 'Segoe UI Black', sans-serif;
+  letter-spacing: 2px;
+  color: #00d8ff;
+
+  /* Soft neon glow */
   text-shadow:
-      0 0 10px #00f7ff,
-      0 0 20px #00f7ff,
-      0 0 30px #00f7ff,
-      0 0 40px #00e6ff,
-      0 0 70px #00e6ff,
-      0 0 100px #00e6ff;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  letter-spacing: 1px;
+      0 0 5px rgba(0, 240, 255, 0.5),
+      0 0 10px rgba(0, 240, 255, 0.35),
+      0 0 18px rgba(0, 240, 255, 0.22);
+
   margin: 0;
 }
 
@@ -70,7 +63,8 @@ header p {
   opacity: .95;
 }
 
-/* ===== MAIN DASHBOARD ===== */
+/* ===== MAIN CONTENT ===== */
+
 .container {
   max-width: 1300px;
   margin: 26px auto;
@@ -129,9 +123,9 @@ h2 {
   overflow-y: auto;
   border: 1px solid #0ad4a6;
   white-space: pre-wrap;
-  transition: 0.3s;
 }
 
+/* BUTTONS */
 .btn {
   background: #0077ff;
   color: white;
@@ -149,60 +143,21 @@ h2 {
   color: black;
 }
 
-footer {
-  text-align: center;
-  padding: 16px;
-  margin-top: 18px;
-  color: #9aa3ad;
-  font-size: .95rem;
-}
-
-canvas {
-  width: 100% !important;
-  max-height: 240px;
-  transition: 0.3s;
-}
-
-select, .small-input {
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: none;
-  background: #0b1720;
-  color: #fff;
-  margin-right: 8px;
-}
-
-.metrics {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
+/* METRICS */
+.metrics { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
 .metric {
   background: #071018;
   padding: 10px 12px;
   border-radius: 8px;
   box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
 }
-.metric strong {
-  display: block;
-  font-size: 1.05rem;
-  color: #fff;
-}
+.metric strong { display: block; font-size: 1.05rem; color: #fff; }
 
-.card h3 {
-  margin: 0 0 8px 0;
-  color: #cfeff2;
-}
-
-/* ===== ALERT WAVE ===== */
+/* ALERT WAVE */
 .alert-wave {
   position: absolute;
-  top: 55%;
-  left: 25%;
-  width: 180px;
-  height: 180px;
+  top: 55%; left: 25%;
+  width: 180px; height: 180px;
   background: radial-gradient(circle, rgba(255,0,0,0.75) 0%, rgba(255,0,0,0) 80%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
@@ -214,8 +169,8 @@ select, .small-input {
 }
 @keyframes ripple {
   0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-  60% { transform: translate(-50%, -50%) scale(2); opacity: 0.4; }
-  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+  60% { transform: scale(2); opacity: 0.4; }
+  100% { transform: scale(3); opacity: 0; }
 }
 
 @media (max-width: 768px) {
@@ -245,6 +200,7 @@ select, .small-input {
   </div>
 
   <div class="grid">
+    <!-- THREAT LOG CARD -->
     <section class="card">
       <h3>Threat Log</h3>
       <div class="threat-log" id="threatLog">[System Initialized]<br></div>
@@ -254,13 +210,14 @@ select, .small-input {
         <button class="btn" onclick="activateLearning()">Train AI (Quick)</button>
         <button class="btn" onclick="clearLog()">Clear Log</button>
         <button class="btn" onclick="predictThreat()">Predict Threat</button>
-        <button class="btn" onclick="autoContain()">Auto Contain Threats</button>
+        <button class="btn" onclick="autoContain()">Auto Contain</button>
         <button class="btn" onclick="generateComplianceReport()">Compliance Report</button>
         <button class="btn" onclick="simulateCyberDrill()">Cyber Drill</button>
         <button class="btn" onclick="testLights()">Test Alert Wave</button>
       </div>
     </section>
 
+    <!-- INTEL FEED -->
     <section class="card">
       <h3>Threat Intelligence Feed</h3>
       <ul id="intelFeed" style="padding-left:16px; margin-top:8px;"></ul>
@@ -275,15 +232,17 @@ select, .small-input {
           <option value="Manufacturing-IoT">Manufacturing-IoT</option>
           <option value="RetailPOS">RetailPOS</option>
         </select>
-        <button class="btn" onclick="scanExternal()">Scan System</button>
+        <button class="btn" onclick="scanExternal()">Scan</button>
       </div>
     </section>
 
+    <!-- ANALYTICS -->
     <section class="card">
       <h3>Threat Analytics</h3>
       <canvas id="threatChart"></canvas>
     </section>
 
+    <!-- HEALTH -->
     <section class="card">
       <div class="alert-wave" id="alertWave"></div>
       <h3>System Health</h3>
@@ -292,23 +251,21 @@ select, .small-input {
       <p>Network Latency: <span id="latency">32ms</span></p>
       <h4>Manual Input Detection</h4>
       <input id="manualInput" class="small-input" placeholder="Paste suspicious payload" style="width:100%; margin-bottom:10px;" />
-      <div>
-        <button class="btn" onclick="detectManual()">Analyze Input</button>
-        <button class="btn" onclick="generateReport()">Generate Report</button>
-      </div>
+      <button class="btn" onclick="detectManual()">Analyze</button>
+      <button class="btn" onclick="generateReport()">Generate Report</button>
     </section>
   </div>
 
   <h2>MellowSecure AI Modules</h2>
   <div class="grid">
-    <section class="card"><h3>Network Security</h3><p>Monitor network traffic and block malicious patterns.</p><button class="btn" onclick="simulateModule('Network Security')">Run Simulation</button></section>
-    <section class="card"><h3>Endpoint Security</h3><p>Protect devices from malware and unauthorized access.</p><button class="btn" onclick="simulateModule('Endpoint Security')">Run Simulation</button></section>
-    <section class="card"><h3>Application Security</h3><p>Scan apps for vulnerabilities like XSS and SQL injection.</p><button class="btn" onclick="simulateModule('Application Security')">Run Simulation</button></section>
-    <section class="card"><h3>Cloud Security</h3><p>Check cloud resources for security misconfigurations.</p><button class="btn" onclick="simulateModule('Cloud Security')">Run Simulation</button></section>
-    <section class="card"><h3>Identity & Access Management</h3><p>Monitor user logins and suspicious access.</p><button class="btn" onclick="simulateModule('IAM')">Run Simulation</button></section>
-    <section class="card"><h3>Incident Response</h3><p>Detect, contain, and resolve cyberattacks.</p><button class="btn" onclick="simulateModule('Incident Response')">Run Simulation</button></section>
-    <section class="card"><h3>Ethical Hacking / Pen Testing</h3><p>Simulate attacks to find weaknesses first.</p><button class="btn" onclick="simulateModule('Penetration Testing')">Run Simulation</button></section>
-    <section class="card"><h3>Digital Forensics</h3><p>Reconstruct attack paths using log evidence.</p><button class="btn" onclick="simulateModule('Digital Forensics')">Run Simulation</button></section>
+    <section class="card"><h3>Network Security</h3><p>Monitors traffic.</p><button class="btn" onclick="simulateModule('Network Security')">Run</button></section>
+    <section class="card"><h3>Endpoint Security</h3><p>Protects devices.</p><button class="btn" onclick="simulateModule('Endpoint Security')">Run</button></section>
+    <section class="card"><h3>Application Security</h3><p>Scans vulnerabilities.</p><button class="btn" onclick="simulateModule('Application Security')">Run</button></section>
+    <section class="card"><h3>Cloud Security</h3><p>Checks cloud configs.</p><button class="btn" onclick="simulateModule('Cloud Security')">Run</button></section>
+    <section class="card"><h3>Identity & Access</h3><p>Monitors logins.</p><button class="btn" onclick="simulateModule('IAM')">Run</button></section>
+    <section class="card"><h3>Incident Response</h3><p>Responds automatically.</p><button class="btn" onclick="simulateModule('Incident Response')">Run</button></section>
+    <section class="card"><h3>Pen Testing</h3><p>Simulates attacks.</p><button class="btn" onclick="simulateModule('Penetration Testing')">Run</button></section>
+    <section class="card"><h3>Digital Forensics</h3><p>Reconstructs events.</p><button class="btn" onclick="simulateModule('Digital Forensics')">Run</button></section>
   </div>
 </main>
 
@@ -332,10 +289,15 @@ let threats={DDoS:0,SQL:0,Malware:0,Phishing:0},scans=0,neutralizedCount=0,predi
 const ctx=document.getElementById('threatChart');
 
 const threatChart=new Chart(ctx,{
-type:'doughnut',
-data:{labels:['DDoS','SQL Injection','Malware','Phishing'],
-datasets:[{data:[0,0,0,0],backgroundColor:['#0077ff','#ff3b3b','#ffa500','#0ad4a6']} ]},
-options:{plugins:{legend:{labels:{color:'#fff'}}},maintainAspectRatio:false}
+  type:'doughnut',
+  data:{
+    labels:['DDoS','SQL Injection','Malware','Phishing'],
+    datasets:[{
+      data:[0,0,0,0],
+      backgroundColor:['#0077ff','#ff3b3b','#ffa500','#0ad4a6']
+    }]
+  },
+  options:{plugins:{legend:{labels:{color:'#fff'}}},maintainAspectRatio:false}
 });
 
 function updateChart(){
